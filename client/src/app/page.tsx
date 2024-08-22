@@ -6,7 +6,7 @@ import Link from "next/link";
 import ButtonRedirect from "./components/ButtonRedirect";
 import { redirect } from "next/navigation";
 
-const isAuth = false
+const isAuth = true
 export default function Home() {
   if (!isAuth) {
     redirect('/login')
