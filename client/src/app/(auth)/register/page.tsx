@@ -1,7 +1,14 @@
+
+import { ModeToggle } from '@/components/model-toggle'
 import React from 'react'
+
 
 export default function RegisterPage() {
   return (
-    <div>RegisterPage</div>
+    <>
+   <ModeToggle />
+     <div>RegisterPage</div>
+    </>
+   
   )
 }
