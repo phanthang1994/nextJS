@@ -1,14 +1,15 @@
+"use client"
 
-import { ModeToggle } from '@/components/model-toggle'
-import React from 'react'
+import RegisterForm from "./regiser-form"
+
+ 
 
 
 export default function RegisterPage() {
-  return (
-    <>
-   <ModeToggle />
-     <div>RegisterPage</div>
-    </>
-   
+   return (
+    <div>
+      <h1>Đăng Ký</h1>
+      <RegisterForm/>
+    </div>
   )
 }

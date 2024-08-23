@@ -19,10 +19,6 @@ export default function RootLayout({
 }>) {
   return (
   <div>
-    <h1>Authenticated</h1>
-    <div>
-      <Link href={'/'}>Home</Link>
-    </div>
     {children}
   </div>
   );
