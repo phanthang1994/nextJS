@@ -1,7 +1,9 @@
 
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import Link from "next/link";
+import { Toaster } from "@/components/ui/toaster"
+import { ThemeProvider } from "@/components/theme-provider";
+import Header from "@/components/header";
 
 
 
@@ -18,8 +20,20 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-  <div>
-    {children}
-  </div>
+    <html lang='en' suppressHydrationWarning>  
+    <body className='${inter.className}'>  
+        <Toaster />  
+        <ThemeProvider  
+            attribute='class'  
+            defaultTheme='system'  
+            enableSystem  
+            disableTransitionOnChange  
+        >  
+            <Header />  
+            {children}  
+        </ThemeProvider>  
+    </body>  
+    </html>  
+  
   );
 }
