@@ -5,6 +5,7 @@ import { ModeToggle } from '@/components/model-toggle'
 import React from 'react'
 
 
+
 import { z } from "zod"
 import { Button } from "@/components/ui/button"
 import {
@@ -20,10 +21,12 @@ import { Input } from "@/components/ui/input"
 import { LoginBodyType, LoginBody } from "@/schemaValidations/auth.schema"
 import envConfig from '@/config'
 import { useToast } from "@/components/ui/use-toast"
+import { useAppContext } from "@/app/AppProvider"
 
 
 
 export default function LoginForm() {
+  const {setSessionToken} = useAppContext()
   // 1. Define your form.
   const { toast } = useToast()
   const form = useForm<LoginBodyType>({
@@ -37,7 +40,7 @@ export default function LoginForm() {
   // 2. Define a submit handler.
   async function onSubmit(values: LoginBodyType) {
     try {
-      console.log('API', envConfig.NEXT_PUBLIC_API_ENDPOINT)
+      // console.log('API', envConfig.NEXT_PUBLIC_API_ENDPOINT)
       const result = await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/auth/login`, {
         method: 'POST',
         headers: {
@@ -56,9 +59,17 @@ export default function LoginForm() {
           }
           return data
         })
-        toast({   
-          description: result.payload.message  
-        })
+      toast({
+        description: result.payload.message
+      });
+      const resultFromNextServer = await fetch('/api/auth', {
+        method: 'POST',
+        body: JSON.stringify(result),
+        headers: {
+          'Content-Type': 'application/json'
+        },
+      });
+      setSessionToken(resultFromNextServer.payload.data.tokem)
     } catch (error: any) {
       const errors = error.payload.errors as {
         field: string;
