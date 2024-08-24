@@ -17,7 +17,8 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { RegisterBody,RegisterBodyType } from "@/schemaValidations/auth.schema"
+import { RegisterBody, RegisterBodyType } from "@/schemaValidations/auth.schema"
+import envConfig from '@/config'
 
 
 export default function RegisterForm() {
@@ -31,16 +32,22 @@ export default function RegisterForm() {
       confirmPassword: "",
     },
   })
- 
+
   // 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values)
+  async function onSubmit(values: RegisterBodyType) {
+
+    console.log('API', envConfig.NEXT_PUBLIC_API_ENDPOINT)
+    const result = await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/auth/register`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(values)
+    })
   }
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+      <form noValidate onSubmit={form.handleSubmit(onSubmit, (error) => console.log('error', error))} className="space-y-2 max-w-[600px] flex-shrink-0 w-full">
         <FormField
           control={form.control}
           name="name"
@@ -54,7 +61,7 @@ export default function RegisterForm() {
             </FormItem>
           )}
         />
-         <FormField
+        <FormField
           control={form.control}
           name="email"
           render={({ field }) => (
@@ -67,7 +74,7 @@ export default function RegisterForm() {
             </FormItem>
           )}
         />
-         <FormField
+        <FormField
           control={form.control}
           name="password"
           render={({ field }) => (
@@ -93,7 +100,7 @@ export default function RegisterForm() {
             </FormItem>
           )}
         />
-        <Button type="submit">Submit</Button>
+        <Button type="submit" className="!mt-8 w-full">Submit</Button>
       </form>
     </Form>
   )
