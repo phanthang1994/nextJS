@@ -1,12 +1,8 @@
 'use client'
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
-import { ModeToggle } from '@/components/model-toggle'
 import React from 'react'
 
-
-import { z } from "zod"
-import { Button } from "@/components/ui/button"
 import {
   Form,
   FormControl,
@@ -18,16 +14,13 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { RegisterBody, RegisterBodyType } from "@/schemaValidations/auth.schema"
-import envConfig from '@/config'
 import authApiRequest from "@/apiRequests/auth"
-import { useAppContext } from "@/app/AppProvider"
 import { useToast } from "@/components/ui/use-toast"
 import { useRouter } from "next/navigation"
+import { Button } from "@/components/ui/button"
 
 
 export default function RegisterForm() {
-
-  const {setSessionToken} = useAppContext()
 
   const { toast } = useToast()
   const router = useRouter()
@@ -52,7 +45,6 @@ export default function RegisterForm() {
         description: result.payload.message
       });
       await authApiRequest.auth({ sessionToken: result.payload.data.token })
-      setSessionToken(result.payload.data.token)
       router.push('/me')
     } catch (error: any) {
       const errors = error.payload.errors as {
