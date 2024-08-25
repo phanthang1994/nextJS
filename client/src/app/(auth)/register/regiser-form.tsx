@@ -19,10 +19,20 @@ import {
 import { Input } from "@/components/ui/input"
 import { RegisterBody, RegisterBodyType } from "@/schemaValidations/auth.schema"
 import envConfig from '@/config'
+import authApiRequest from "@/apiRequests/auth"
+import { useAppContext } from "@/app/AppProvider"
+import { useToast } from "@/components/ui/use-toast"
+import { useRouter } from "next/navigation"
 
 
 export default function RegisterForm() {
-  // 1. Define your form.
+
+  const {setSessionToken} = useAppContext()
+
+  const { toast } = useToast()
+  const router = useRouter()
+
+  
   const form = useForm<RegisterBodyType>({
     resolver: zodResolver(RegisterBody),
     defaultValues: {
@@ -35,15 +45,37 @@ export default function RegisterForm() {
 
   // 2. Define a submit handler.
   async function onSubmit(values: RegisterBodyType) {
-
-    console.log('API', envConfig.NEXT_PUBLIC_API_ENDPOINT)
-    const result = await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/auth/register`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(values)
-    })
+    try {
+      // console.log('API', envConfig.NEXT_PUBLIC_API_ENDPOINT)
+      const result = await authApiRequest.register(values)
+      toast({
+        description: result.payload.message
+      });
+      await authApiRequest.auth({ sessionToken: result.payload.data.token })
+      setSessionToken(result.payload.data.token)
+      router.push('/me')
+    } catch (error: any) {
+      const errors = error.payload.errors as {
+        field: string;
+        message: string;
+      }[]
+      const status = error.status as number;
+      if (status === 422) {
+        errors.forEach((error) => {
+          form.setError(error.field as 'email' | 'password', {
+            type: 'server',
+            message: error.message
+          });
+        });
+      }
+      else {
+        toast({
+          title: 'Lỗi',
+          description: error.payload.message,
+          variant: 'destructive',
+        })
+      }
+    }
   }
   return (
     <Form {...form}>

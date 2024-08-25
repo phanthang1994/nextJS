@@ -22,6 +22,8 @@ import { LoginBodyType, LoginBody } from "@/schemaValidations/auth.schema"
 import envConfig from '@/config'
 import { useToast } from "@/components/ui/use-toast"
 import { useAppContext } from "@/app/AppProvider"
+import authApiRequest from "@/apiRequests/auth"
+import { useRouter } from "next/navigation"
 
 
 
@@ -29,6 +31,7 @@ export default function LoginForm() {
   const {setSessionToken} = useAppContext()
   // 1. Define your form.
   const { toast } = useToast()
+  const router = useRouter()
   const form = useForm<LoginBodyType>({
     resolver: zodResolver(LoginBody),
     defaultValues: {
@@ -41,35 +44,13 @@ export default function LoginForm() {
   async function onSubmit(values: LoginBodyType) {
     try {
       // console.log('API', envConfig.NEXT_PUBLIC_API_ENDPOINT)
-      const result = await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/auth/login`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(values)
-      })
-        .then(async (neo) => {
-          const payload = await neo.json()
-          const data = {
-            status: neo.status,
-            payload
-          }
-          if (!neo.ok) {
-            throw data
-          }
-          return data
-        })
+      const result = await authApiRequest.login(values)
       toast({
         description: result.payload.message
       });
-      const resultFromNextServer = await fetch('/api/auth', {
-        method: 'POST',
-        body: JSON.stringify(result),
-        headers: {
-          'Content-Type': 'application/json'
-        },
-      });
-      setSessionToken(resultFromNextServer.payload.data.tokem)
+      await authApiRequest.auth({ sessionToken: result.payload.data.token })
+      setSessionToken(result.payload.data.token)
+      router.push('/me')
     } catch (error: any) {
       const errors = error.payload.errors as {
         field: string;
