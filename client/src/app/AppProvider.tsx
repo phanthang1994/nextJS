@@ -8,12 +8,10 @@ export default function AppProvider({ children, initialSessionToken ='' }:
     { children: React.ReactNode, initialSessionToken: string | undefined }) {
 
         useState(() => {  
-            if (typeof window === 'undefined') {  
-                <>
-                {children}
-            </>
+            if (typeof window !== 'undefined') {  
+                clientSessionToken.value = initialSessionToken  
             }  
-            clientSessionToken.value = initialSessionToken  
+           
         });
 
     return (
