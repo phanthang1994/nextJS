@@ -1,14 +1,17 @@
-import http from '@/lib/http'  
-import { AccountResType } from '@/schemaValidations/account.schema';
+import http from '@/lib/http';  
+import { AccountResType } from '@/schemaValidations/account.schema';  
 
 const accountApiRequest = {  
-  me: (sessionToken: string) =>  
-    http.get<AccountResType>('account/me', {  
+  me: async (sessionToken: string) => {  
+    return await http.get<AccountResType>('account/me', {  
       headers: {  
         Authorization: `Bearer ${sessionToken}`  
       }  
-    }),  
-    meClient: ()=> http.get<AccountResType>('account/me')
-}  
+    });  
+  },  
+  meClient: async () => {  
+    return await http.get<AccountResType>('account/me');  
+  }  
+};  
 
 export default accountApiRequest;

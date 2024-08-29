@@ -22,9 +22,9 @@ export default function RootLayout({
   const sessionToken = cookieStore.get("sessionToken")?.value;
   return (
     <>
-      <html lang="en" suppressHydrationWarning>
+      <html lang="en" suppressHydrationWarning={true}>
         <head />
-        <body>
+        <body suppressHydrationWarning={true}>
           <ThemeProvider
             attribute="class"
             defaultTheme="system"
