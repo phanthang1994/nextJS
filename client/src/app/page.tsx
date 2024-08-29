@@ -16,16 +16,6 @@ export default function Home() {
   return (
 
     <main>
-      <ul>
-        <li>
-          <Link href={'/login'}>
-          </Link>
-        </li>
-        <li>
-          <Link href={'/register'}>
-          </Link>
-        </li>
-      </ul>
      <ButtonRedirect />
     </main>
 

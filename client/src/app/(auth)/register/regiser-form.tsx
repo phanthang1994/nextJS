@@ -18,6 +18,7 @@ import authApiRequest from "@/apiRequests/auth"
 import { useToast } from "@/components/ui/use-toast"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
+import { handleErrorApi } from "@/lib/utils"
 
 
 export default function RegisterForm() {
@@ -46,27 +47,14 @@ export default function RegisterForm() {
       });
       await authApiRequest.auth({ sessionToken: result.payload.data.token })
       router.push('/me')
-    } catch (error: any) {
-      const errors = error.payload.errors as {
-        field: string;
-        message: string;
-      }[]
-      const status = error.status as number;
-      if (status === 422) {
-        errors.forEach((error) => {
-          form.setError(error.field as 'email' | 'password', {
-            type: 'server',
-            message: error.message
-          });
-        });
-      }
-      else {
-        toast({
-          title: 'Lỗi',
-          description: error.payload.message,
-          variant: 'destructive',
-        })
-      }
+    } 
+    catch (error: any)
+     {
+      handleErrorApi(
+        {error,
+          setError: form.setError
+        }
+      )
     }
   }
   return (

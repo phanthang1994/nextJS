@@ -1,5 +1,4 @@
 
-import envConfig from '@/config';
 import { cookies } from 'next/headers'
 
 import React from 'react'
