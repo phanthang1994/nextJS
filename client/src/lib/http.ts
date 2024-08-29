@@ -61,7 +61,7 @@ const request = async<Respones>(method: 'GET' | 'POST' | 'PUT' | 'DELETE', url: 
             payload
         });
     }
-    if (['/auth/login' || '/auth/register'].includes(url)) {  
+    if (['/auth/login','/auth/register'].includes(url)) {  
         clientSessionToken.value = (payload as LoginResType).data.token  
     } else if ('/auth/logout'.includes(url)) {  
         clientSessionToken.value = ''  
