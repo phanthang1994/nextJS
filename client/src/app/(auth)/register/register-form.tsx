@@ -12,31 +12,35 @@ import {
   FormMessage
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { LoginBody, LoginBodyType } from '@/schemaValidations/auth.schema'
-import { useToast, toast } from '@/components/ui/use-toast'
+import { RegisterBody, RegisterBodyType } from '@/schemaValidations/auth.schema'
 import authApiRequest from '@/apiRequests/auth'
+import { useToast } from '@/components/ui/use-toast'
 import { useRouter } from 'next/navigation'
 import { handleErrorApi } from '@/lib/utils'
 import { useState } from 'react'
 
-const LoginForm = () => {
+const RegisterForm = () => {
   const [loading, setLoading] = useState(false)
+
   const { toast } = useToast()
   const router = useRouter()
-  const form = useForm<LoginBodyType>({
-    resolver: zodResolver(LoginBody),
+
+  const form = useForm<RegisterBodyType>({
+    resolver: zodResolver(RegisterBody),
     defaultValues: {
       email: '',
-      password: ''
+      name: '',
+      password: '',
+      confirmPassword: ''
     }
   })
 
   // 2. Define a submit handler.
-  async function onSubmit(values: LoginBodyType) {
+  async function onSubmit(values: RegisterBodyType) {
     if (loading) return
     setLoading(true)
     try {
-      const result = await authApiRequest.login(values)
+      const result = await authApiRequest.register(values)
       toast({
         description: result.payload.message
       })
@@ -58,6 +62,19 @@ const LoginForm = () => {
         className='space-y-2 max-w-[600px] flex-shrink-0 w-full'
         noValidate
       >
+        <FormField
+          control={form.control}
+          name='name'
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Tên</FormLabel>
+              <FormControl>
+                <Input placeholder='shadcn' {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
         <FormField
           control={form.control}
           name='email'
@@ -84,13 +101,25 @@ const LoginForm = () => {
             </FormItem>
           )}
         />
-
+        <FormField
+          control={form.control}
+          name='confirmPassword'
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Nhập lại mật khẩu</FormLabel>
+              <FormControl>
+                <Input placeholder='shadcn' type='password' {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
         <Button type='submit' className='!mt-8 w-full'>
-          Đăng nhập
+          Đăng ký
         </Button>
       </form>
     </Form>
   )
 }
 
-export default LoginForm
+export default RegisterForm

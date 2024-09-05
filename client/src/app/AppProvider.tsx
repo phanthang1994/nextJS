@@ -1,22 +1,19 @@
 'use client'
-import { clientSessionToken } from '@/lib/http';
-import { createContext, useState } from 'react';
-const AppContext = createContext({});
+import { clientSessionToken } from '@/lib/http'
+import { useState } from 'react'
 
+export default function AppProvider({
+  children,
+  inititalSessionToken = ''
+}: {
+  children: React.ReactNode
+  inititalSessionToken?: string
+}) {
+  useState(() => {
+    if (typeof window !== 'undefined') {
+      clientSessionToken.value = inititalSessionToken
+    }
+  })
 
-export default function AppProvider({ children, initialSessionToken ='' }:
-    { children: React.ReactNode, initialSessionToken: string | undefined }) {
-
-        useState(() => {  
-            if (typeof window !== 'undefined') {  
-                clientSessionToken.value = initialSessionToken  
-            }  
-           
-        });
-
-    return (
-        <>
-            {children}
-        </>
-    );
+  return <>{children}</>
 }

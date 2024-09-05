@@ -1,14 +1,9 @@
-import { cookies } from 'next/headers'
-
 export async function POST(request: Request) {
   const res = await request.json()
-  console.log(res)
   const sessionToken = res.sessionToken as string
   if (!sessionToken) {
     return Response.json(
-      {
-        message: 'Không nhận được session token'
-      },
+      { message: 'Không nhận được session token' },
       {
         status: 400
       }
@@ -20,4 +15,4 @@ export async function POST(request: Request) {
       'Set-Cookie': `sessionToken=${sessionToken}; Path=/; HttpOnly`
     }
   })
-}  
+}

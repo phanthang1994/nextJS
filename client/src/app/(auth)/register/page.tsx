@@ -1,18 +1,16 @@
-"use client"
+'use client'
 
-import RegisterForm from "./regiser-form"
+import RegisterForm from '@/app/(auth)/register/register-form'
 
- 
-
-
-export default function RegisterPage() {
-   return (
+const RegisterPage = () => {
+  return (
     <div>
-      <h1 className="text-xl font-bold underline text-center">Đăng Ký</h1>
-      <div className="flex justify-center">
-      <RegisterForm/>
-
+      <h1 className='text-xl font-semibold text-center'>Đăng ký</h1>
+      <div className='flex justify-center'>
+        <RegisterForm />
       </div>
     </div>
   )
 }
+
+export default RegisterPage

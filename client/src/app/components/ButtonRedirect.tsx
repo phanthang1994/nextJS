@@ -1,15 +1,16 @@
 'use client'
-import React from 'react'
-import { useRouter } from "next/navigation";
+import { useRouter } from 'next/navigation'
+import { redirect } from 'next/navigation'
+const isAuth = false
 
 export default function ButtonRedirect() {
-    const router = useRouter()
-    const handleNavigate = () => {
-      router.push('/login')
-    }
-  return (
-    <button onClick={handleNavigate}>
-    Chuyển sang trang Login
-  </button>
-)
+  if (!isAuth) {
+    redirect('/login')
+  }
+  const router = useRouter()
+  const handleNavigate = () => {
+    router.push('/login')
+    // redirect('/login')
+  }
+  return <button onClick={handleNavigate}>Chuyển sang trang Login</button>
 }
