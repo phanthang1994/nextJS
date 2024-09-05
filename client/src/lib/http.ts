@@ -1,6 +1,6 @@
 import envConfig from '@/config'
+import { normalizePath } from '@/lib/utils'
 import { LoginResType } from '@/schemaValidations/auth.schema'
-import { normalizePath } from './utils'
 
 type CustomOptions = Omit<RequestInit, 'method'> & {
   baseUrl?: string | undefined
@@ -110,9 +110,13 @@ const request = async <Response>(
       throw new HttpError(data)
     }
   }
+  // Đảm bảo logic dưới đây chỉ chạy ở phía client (browser)
   if (typeof window !== 'undefined') {
-
-    if (['auth/login', 'auth/register'].some(item => item === normalizePath(url))) {
+    if (
+      ['auth/login', 'auth/register'].some(
+        (item) => item === normalizePath(url)
+      )
+    ) {
       clientSessionToken.value = (payload as LoginResType).data.token
     } else if ('auth/logout' === normalizePath(url)) {
       clientSessionToken.value = ''

@@ -1,6 +1,6 @@
+import ButtonLogout from '@/components/button-logout'
 import { ModeToggle } from '@/components/mode-toggle'
 import Link from 'next/link'
-import ButtonLogout from './button-logout'
 
 export default function Header() {
   return (
